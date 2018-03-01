@@ -1,0 +1,34 @@
+---
+title: "eda1"
+author: "Adam Chandler"
+date: "3/1/2018"
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load_libraries}
+
+library(tidyverse)
+library(tidytext)
+library(readr)
+
+```
+
+
+```{r load_data}
+
+ld_survey <- read_csv("data/ld_survey_anonymized_20180301.csv")
+
+```
+
+
+```{r glimpse_at_data}
+glimpse(ld_survey)
+
+```
+
