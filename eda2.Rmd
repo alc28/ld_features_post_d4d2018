@@ -1,0 +1,53 @@
+---
+title: "eda2"
+author: "Adam Chandler"
+date: "3/1/2018"
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r }
+
+# Load libraries
+
+library(tidyverse)
+library(tidytext)
+library(knitr)
+library(stringr)
+library(kableExtra)
+
+
+# Load data
+ld_survey <- read_csv("data/ld_survey_anonymized_20180301.csv")
+names(ld_survey) <- c("response_id", "ld_features", "reviewer1_features_score", "reviewer2_features_score", "reviewer3_features_score", "reviewer4_features_score", "features_total_score")
+
+```
+
+
+# Highest score
+
+```{r}
+
+ld_survey %>%
+  top_n(1, wt = features_total_score) %>%
+  kable("html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+
+```
+
+# Lowest scores
+
+
+```{r}
+
+ld_survey %>%
+  top_n(-1, wt = features_total_score) %>%
+  kable("html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+
+```

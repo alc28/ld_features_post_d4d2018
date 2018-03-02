@@ -11,23 +11,18 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r load_libraries}
+```{r }
+
+# Load libraries
 
 library(tidyverse)
 library(tidytext)
 library(readr)
 
-```
-
-
-```{r load_data}
-
+# Load Data
 ld_survey <- read_csv("data/ld_survey_anonymized_20180301.csv")
 
-```
-
-
-```{r glimpse_at_data}
+# Glimpse
 glimpse(ld_survey)
 
 ```

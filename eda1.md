@@ -11,6 +11,8 @@ output:
 
 
 ```r
+# Load libraries
+
 library(tidyverse)
 ```
 
@@ -35,11 +37,8 @@ library(tidyverse)
 ```r
 library(tidytext)
 library(readr)
-```
 
-
-
-```r
+# Load Data
 ld_survey <- read_csv("data/ld_survey_anonymized_20180301.csv")
 ```
 
@@ -56,9 +55,8 @@ ld_survey <- read_csv("data/ld_survey_anonymized_20180301.csv")
 ## )
 ```
 
-
-
 ```r
+# Glimpse
 glimpse(ld_survey)
 ```
 

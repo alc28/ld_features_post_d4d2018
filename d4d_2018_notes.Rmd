@@ -1,0 +1,35 @@
+---
+title: "D4D 2018"
+author: "Adam Chandler"
+date: "3/2/2018"
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Designing for Digital 2018
+
+
+## Linked Data in Libraries Feature Study project: https://osf.io/5d32c/  
+
+Includes:  
+* Survey instrument  
+* Email group distribution list  
+* Anonymized and redacted data set  
+
+
+
+
+
+
+
+
+
+
+
+
+
