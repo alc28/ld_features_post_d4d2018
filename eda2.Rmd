@@ -1,5 +1,5 @@
 ---
-title: "eda2"
+title: "eda2 - Feature scores"
 author: "Adam Chandler"
 date: "3/1/2018"
 output: 
