@@ -1,5 +1,5 @@
 ---
-title: "eda4 - bigrams"
+title: "eda5 - Word co-ocurrences"
 author: "Adam Chandler"
 date: "3/1/2018"
 output: 
@@ -180,8 +180,28 @@ feature_word_pairs <- df_ld_features %>%
 ```r
 set.seed(1234)
 
-# macro to micro
+feature_word_pairs
+```
 
+```
+## # A tibble: 39,010 x 3
+##          item1       item2     n
+##          <chr>       <chr> <dbl>
+##  1 linked_data     library    17
+##  2       users        data    17
+##  3      search     library    15
+##  4 linked_data       users    15
+##  5     library       users    15
+##  6      linked        data    14
+##  7     library information    13
+##  8     library        data    13
+##  9      search linked_data    12
+## 10       users information    12
+## # ... with 39,000 more rows
+```
+
+```r
+# macro to micro
 feature_word_pairs %>%
   filter(n > 3) %>%
   graph_from_data_frame() %>%
