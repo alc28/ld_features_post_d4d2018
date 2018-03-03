@@ -24,12 +24,12 @@ library(kableExtra)
 
 # Load data
 ld_survey <- read_csv("data/ld_survey_anonymized_20180301.csv")
-names(ld_survey) <- c("response_id", "ld_features", "reviewer1_features_score", "reviewer2_features_score", "reviewer3_features_score", "reviewer4_features_score", "features_total_score")
+names(ld_survey) <- c("response_id", "ld_features", "rev1_score", "rev2_score", "rev3_score", "rev4_score", "features_total_score")
 
 ```
 
 
-# Highest score
+# Highest features score
 
 ```{r}
 
@@ -40,7 +40,7 @@ ld_survey %>%
 
 ```
 
-# Lowest scores
+# Lowest features total scores
 
 
 ```{r}
@@ -51,3 +51,14 @@ ld_survey %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 
 ```
+
+
+```{r}
+
+summary(ld_survey$features_total_score)
+
+ggplot(ld_survey, aes(features_total_score)) + geom_histogram(binwidth = 1) +
+  ggtitle("\nLD Survey features total scores distribution", subtitle = "D4D")
+
+```
+

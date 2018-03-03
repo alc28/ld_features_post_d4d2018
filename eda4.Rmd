@@ -1,0 +1,101 @@
+---
+title: "eda4 - bigrams"
+author: "Adam Chandler"
+date: "3/1/2018"
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Prepare data
+
+```{r }
+
+# Load libraries
+
+library(tidyverse)
+library(tidytext)
+library(knitr)
+library(stringr)
+library(kableExtra)
+data("stop_words")
+library(igraph)
+library(ggraph)
+
+
+# load libraries
+# Remove responses with 0 feature total score and normalize(i.e., linked data)
+clean_features_text <- function(ld_survey) {
+  ld_survey_nonzero <- ld_survey %>%
+    filter(features_total_score > 0)
+  ld_survey_cleaned <- ld_survey_nonzero
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, "linked data", "linked_data")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, "linked open data", "linked_data")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, "lod", "linked_data")
+  return(ld_survey_cleaned)
+}
+
+# Load data
+ld_survey <- read_csv("data/ld_survey_anonymized_20180301.csv")
+names(ld_survey) <- c("response_id", "ld_features", "rev1_score", "rev2_score", "rev3_score", "rev4_score", "features_total_score")
+
+# clean data
+ld_survey_cleaned <- clean_features_text(ld_survey)
+
+
+```
+
+
+# Create bigrams (after removing stop words)
+
+```{r}
+
+bigrams <- ld_survey_cleaned %>%
+  unnest_tokens(bigram, ld_features, token = "ngrams", n = 2) %>% 
+  select(response_id, bigram) %>% 
+  arrange(response_id)
+
+bigrams_count <- bigrams %>%
+  count(bigram, sort = TRUE)
+
+bigram_counts_separated <- bigrams %>%
+  select(bigram) %>%
+  separate(bigram, c("word1", "word2"), sep = " ") %>%
+  filter(!word1 %in% stop_words$word, 
+         !word2 %in% stop_words$word) %>%
+  count(word1, word2, sort = TRUE)
+
+bigram_counts_separated %>% 
+  filter(str_detect(word1, "linked_data" ) | str_detect(word2, "linked_data"))
+
+bigram_counts_separated
+
+
+```
+
+# Graph bigrams
+
+```{r}
+
+bigram_graph <- bigram_counts_separated %>%
+  filter(n > 1) %>%
+  graph_from_data_frame()
+
+
+set.seed(2017)
+a <- grid::arrow(type = "closed", length = unit(.1, "inches"))
+ggraph(bigram_graph, layout = "fr") +
+  geom_edge_link(aes(edge_alpha = n), show.legend = FALSE, arrow = a, end_cap = circle(.07, 'inches')) +
+  geom_node_point(color = "lightblue", size = 2) +
+  geom_node_text(aes(label = name), vjust = 1, hjust = 0.5) +
+  theme_void()
+
+ggsave(plot = last_plot(), filename = "output/ld_study_bigraph.png", height = 7, width = 10, units = "in", dpi = 300)
+  
+```
+
+

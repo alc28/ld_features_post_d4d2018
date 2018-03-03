@@ -59,11 +59,11 @@ ld_survey <- read_csv("data/ld_survey_anonymized_20180301.csv")
 ```
 
 ```r
-names(ld_survey) <- c("response_id", "ld_features", "reviewer1_features_score", "reviewer2_features_score", "reviewer3_features_score", "reviewer4_features_score", "features_total_score")
+names(ld_survey) <- c("response_id", "ld_features", "rev1_score", "rev2_score", "rev3_score", "rev4_score", "features_total_score")
 ```
 
 
-# Highest score
+# Highest features score
 
 
 ```r
@@ -78,10 +78,10 @@ ld_survey %>%
   <tr>
    <th style="text-align:left;"> response_id </th>
    <th style="text-align:left;"> ld_features </th>
-   <th style="text-align:right;"> reviewer1_features_score </th>
-   <th style="text-align:right;"> reviewer2_features_score </th>
-   <th style="text-align:right;"> reviewer3_features_score </th>
-   <th style="text-align:right;"> reviewer4_features_score </th>
+   <th style="text-align:right;"> rev1_score </th>
+   <th style="text-align:right;"> rev2_score </th>
+   <th style="text-align:right;"> rev3_score </th>
+   <th style="text-align:right;"> rev4_score </th>
    <th style="text-align:right;"> features_total_score </th>
   </tr>
  </thead>
@@ -98,7 +98,7 @@ ld_survey %>%
 </tbody>
 </table>
 
-# Lowest scores
+# Lowest features total scores
 
 
 
@@ -114,10 +114,10 @@ ld_survey %>%
   <tr>
    <th style="text-align:left;"> response_id </th>
    <th style="text-align:left;"> ld_features </th>
-   <th style="text-align:right;"> reviewer1_features_score </th>
-   <th style="text-align:right;"> reviewer2_features_score </th>
-   <th style="text-align:right;"> reviewer3_features_score </th>
-   <th style="text-align:right;"> reviewer4_features_score </th>
+   <th style="text-align:right;"> rev1_score </th>
+   <th style="text-align:right;"> rev2_score </th>
+   <th style="text-align:right;"> rev3_score </th>
+   <th style="text-align:right;"> rev4_score </th>
    <th style="text-align:right;"> features_total_score </th>
   </tr>
  </thead>
@@ -187,3 +187,26 @@ ld_survey %>%
   </tr>
 </tbody>
 </table>
+
+
+
+```r
+summary(ld_survey$features_total_score)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##   0.000   3.000   5.000   5.264   7.500  12.000       1
+```
+
+```r
+ggplot(ld_survey, aes(features_total_score)) + geom_histogram(binwidth = 1) +
+  ggtitle("\nLD Survey features total scores distribution", subtitle = "D4D")
+```
+
+```
+## Warning: Removed 1 rows containing non-finite values (stat_bin).
+```
+
+![](eda2_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+
