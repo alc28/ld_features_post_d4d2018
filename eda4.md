@@ -1,5 +1,5 @@
 ---
-title: "eda4 - bigrams"
+title: "eda4 - Bigrams"
 author: "Adam Chandler"
 date: "3/1/2018"
 output: 

@@ -1,5 +1,5 @@
 ---
-title: "eda1"
+title: "eda1 - A glimpse at the data set"
 author: "Adam Chandler"
 date: "3/1/2018"
 output: 
