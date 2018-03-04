@@ -62,3 +62,10 @@ ggplot(ld_survey, aes(features_total_score)) + geom_histogram(binwidth = 1) +
 
 ```
 
+
+```{r}
+
+cor(ld_survey[c("rev1_score", "rev2_score", "rev3_score", "rev4_score")], use = "complete")
+
+```
+

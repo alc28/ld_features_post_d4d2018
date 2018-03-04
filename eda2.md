@@ -210,3 +210,17 @@ ggplot(ld_survey, aes(features_total_score)) + geom_histogram(binwidth = 1) +
 
 ![](eda2_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
 
+
+
+```r
+cor(ld_survey[c("rev1_score", "rev2_score", "rev3_score", "rev4_score")], use = "complete")
+```
+
+```
+##            rev1_score rev2_score rev3_score rev4_score
+## rev1_score  1.0000000  0.4091043  0.4578293  0.6096121
+## rev2_score  0.4091043  1.0000000  0.4740627  0.4012963
+## rev3_score  0.4578293  0.4740627  1.0000000  0.4761697
+## rev4_score  0.6096121  0.4012963  0.4761697  1.0000000
+```
+
