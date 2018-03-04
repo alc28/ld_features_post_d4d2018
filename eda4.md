@@ -96,9 +96,9 @@ clean_features_text <- function(ld_survey) {
   ld_survey_nonzero <- ld_survey %>%
     filter(features_total_score > 0)
   ld_survey_cleaned <- ld_survey_nonzero
-  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, "linked data", "linked_data")
-  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, "linked open data", "linked_data")
-  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, "lod", "linked_data")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("linked data", ignore_case = TRUE), "linked_data")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("linked open data", ignore_case = TRUE), "linked_data")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex(" lod ", ignore_case = TRUE), " linked_data ")
   return(ld_survey_cleaned)
 }
 
@@ -151,20 +151,20 @@ bigram_counts_separated %>%
 ```
 
 ```
-## # A tibble: 22 x 3
-##          word1       word2     n
-##          <chr>       <chr> <int>
-##  1 linked_data environment     2
-##  2 linked_data       users     2
-##  3   pervasive linked_data     2
-##  4      austen linked_data     1
-##  5      enable linked_data     1
-##  6  government linked_data     1
-##  7    leverage linked_data     1
-##  8  leveraging linked_data     1
-##  9 linked_data     applied     1
-## 10 linked_data       based     1
-## # ... with 12 more rows
+## # A tibble: 33 x 3
+##           word1       word2     n
+##           <chr>       <chr> <int>
+##  1  linked_data environment     2
+##  2  linked_data       users     2
+##  3    pervasive linked_data     2
+##  4       austen linked_data     1
+##  5    clientele linked_data     1
+##  6       enable linked_data     1
+##  7   government linked_data     1
+##  8 institutions linked_data     1
+##  9           ir linked_data     1
+## 10     leverage linked_data     1
+## # ... with 23 more rows
 ```
 
 ```r
@@ -172,20 +172,20 @@ bigram_counts_separated
 ```
 
 ```
-## # A tibble: 929 x 3
+## # A tibble: 928 x 3
 ##        word1       word2     n
 ##        <chr>       <chr> <int>
-##  1    linked        data    15
-##  2   library       users    11
-##  3   library collections     8
-##  4    search     engines     7
-##  5    search     results     5
-##  6   special collections     5
-##  7 authority     records     4
-##  8 knowledge       graph     4
-##  9    linked        jazz     4
-## 10   subject    headings     4
-## # ... with 919 more rows
+##  1   library       users    11
+##  2   library collections     8
+##  3    search     engines     7
+##  4    search     results     5
+##  5   special collections     5
+##  6 authority     records     4
+##  7 knowledge       graph     4
+##  8    linked        jazz     4
+##  9   subject    headings     4
+## 10    titles    subjects     4
+## # ... with 918 more rows
 ```
 
 # Graph bigrams

@@ -97,9 +97,9 @@ clean_features_text <- function(ld_survey) {
   ld_survey_nonzero <- ld_survey %>%
     filter(features_total_score > 0)
   ld_survey_cleaned <- ld_survey_nonzero
-  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, "linked data", "linked_data")
-  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, "linked open data", "linked_data")
-  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, "lod", "linked_data")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("linked data", ignore_case = TRUE), "linked_data")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("linked open data", ignore_case = TRUE), "linked_data")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex(" lod ", ignore_case = TRUE), " linked_data ")
   return(ld_survey_cleaned)
 }
 
@@ -156,16 +156,16 @@ df_ld_features %>%
 ## # A tibble: 1,102 x 2
 ##           word     n
 ##          <chr> <int>
-##  1     library    57
-##  2       users    53
-##  3 linked_data    44
+##  1 linked_data    61
+##  2     library    57
+##  3       users    53
 ##  4      search    41
-##  5        data    40
-##  6 information    39
-##  7 collections    31
-##  8      linked    26
-##  9    metadata    19
-## 10    research    19
+##  5 information    39
+##  6 collections    31
+##  7        data    24
+##  8    metadata    19
+##  9    research    19
+## 10   resources    18
 ## # ... with 1,092 more rows
 ```
 
@@ -174,7 +174,7 @@ feature_word_pairs <- df_ld_features %>%
   pairwise_count(word, id, sort = TRUE, upper = FALSE)
 ```
 
-# Co-occurrence plots
+# Co-occurrence (word pair) plots
 
 
 ```r
@@ -184,20 +184,20 @@ feature_word_pairs
 ```
 
 ```
-## # A tibble: 39,010 x 3
+## # A tibble: 38,656 x 3
 ##          item1       item2     n
 ##          <chr>       <chr> <dbl>
 ##  1 linked_data     library    17
-##  2       users        data    17
+##  2 linked_data       users    17
 ##  3      search     library    15
-##  4 linked_data       users    15
-##  5     library       users    15
-##  6      linked        data    14
-##  7     library information    13
-##  8     library        data    13
-##  9      search linked_data    12
-## 10       users information    12
-## # ... with 39,000 more rows
+##  4     library       users    15
+##  5      search linked_data    13
+##  6     library information    13
+##  7       users        data    13
+##  8 linked_data information    12
+##  9       users information    12
+## 10 linked_data collections    11
+## # ... with 38,646 more rows
 ```
 
 ```r

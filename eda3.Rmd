@@ -68,11 +68,17 @@ tidy_words_stopped <- tidy_words %>%
 # Let's go back a step and clean up the data a little by normalizing permutations of "linked data" then take a look
 
 ```{r}
-ld_survey_cleaned <- ld_survey_nonzero
-ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, "linked data", "linked_data")
-ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, "linked open data", "linked_data")
-ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, "lod", "linked_data")
+clean_features_text <- function(ld_survey) {
+  ld_survey_nonzero <- ld_survey %>%
+    filter(features_total_score > 0)
+  ld_survey_cleaned <- ld_survey_nonzero
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("linked data", ignore_case = TRUE), "linked_data")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("linked open data", ignore_case = TRUE), "linked_data")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex(" lod ", ignore_case = TRUE), " linked_data ")
+  return(ld_survey_cleaned)
+}
 
+ld_survey_cleaned <- clean_features_text(ld_survey)
 
 tidy_words_stopped <- ld_survey_cleaned %>% 
   unnest_tokens(word, ld_features) %>%

@@ -34,9 +34,9 @@ clean_features_text <- function(ld_survey) {
   ld_survey_nonzero <- ld_survey %>%
     filter(features_total_score > 0)
   ld_survey_cleaned <- ld_survey_nonzero
-  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, "linked data", "linked_data")
-  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, "linked open data", "linked_data")
-  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, "lod", "linked_data")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("linked data", ignore_case = TRUE), "linked_data")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("linked open data", ignore_case = TRUE), "linked_data")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex(" lod ", ignore_case = TRUE), " linked_data ")
   return(ld_survey_cleaned)
 }
 
@@ -73,7 +73,7 @@ feature_word_pairs <- df_ld_features %>%
 
 ```
 
-# Co-occurrence plots
+# Co-occurrence (word pair) plots
 
 ```{r}
 
@@ -114,9 +114,6 @@ feature_word_pairs %>%
                  point.padding = unit(0.2, "inches")) +
   theme_void()
   
-
-
-
 ```
 
 
