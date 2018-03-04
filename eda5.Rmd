@@ -1,5 +1,5 @@
 ---
-title: "eda5 - Word co-ocurrences"
+title: "eda5 - Word co-ocurrences and correlations"
 author: "Adam Chandler"
 date: "3/1/2018"
 output: 
@@ -37,7 +37,13 @@ clean_features_text <- function(ld_survey) {
   ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("linked data", ignore_case = TRUE), "linked_data")
   ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("linked open data", ignore_case = TRUE), "linked_data")
   ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex(" lod ", ignore_case = TRUE), " linked_data ")
-  return(ld_survey_cleaned)
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex(" user ", ignore_case = TRUE), " users ")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("collection ", ignore_case = TRUE), "collections ")  
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("resource ", ignore_case = TRUE), "resources ")  
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("library ", ignore_case = TRUE), "libraries ")  
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("author ", ignore_case = TRUE), "authors ")  
+
+    return(ld_survey_cleaned)
 }
 
 # Load data
@@ -83,7 +89,7 @@ feature_word_pairs
 
 # macro to micro
 feature_word_pairs %>%
-  filter(n > 3) %>%
+  filter(n > 5) %>%
   graph_from_data_frame() %>%
   ggraph(layout = "fr") +
   geom_edge_link(aes(edge_alpha = n, edge_width = n), edge_colour = "cyan4") +
@@ -116,4 +122,40 @@ feature_word_pairs %>%
   
 ```
 
+# Pairwise correlation
+
+```{r}
+
+word_cors <- df_ld_features %>%
+  group_by(word) %>%#
+  filter(n() >= 10) %>%
+  pairwise_cor(word, id, sort = TRUE)
+
+word_cors %>%
+  filter(item1 %in% c("collections", "users", "search")) %>%
+  group_by(item1) %>%
+  top_n(10) %>%
+  ungroup() %>%
+  mutate(item2 = reorder(item2, correlation)) %>%
+  ggplot(aes(item2, correlation)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ item1, scales = "free") +
+  coord_flip()
+
+set.seed(2016)
+
+word_cors %>%
+  filter(correlation > .15) %>%
+  graph_from_data_frame() %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(edge_alpha = correlation), show.legend = FALSE) +
+  geom_node_point(color = "lightblue", size = 5) +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  theme_void()
+  
+
+feature_word_pairs %>%
+  filter(n > 10)
+
+```
 

@@ -1,5 +1,5 @@
 ---
-title: "eda5 - Word co-ocurrences"
+title: "eda5 - Word co-ocurrences and correlations"
 author: "Adam Chandler"
 date: "3/1/2018"
 output: 
@@ -100,7 +100,13 @@ clean_features_text <- function(ld_survey) {
   ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("linked data", ignore_case = TRUE), "linked_data")
   ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("linked open data", ignore_case = TRUE), "linked_data")
   ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex(" lod ", ignore_case = TRUE), " linked_data ")
-  return(ld_survey_cleaned)
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex(" user ", ignore_case = TRUE), " users ")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("collection ", ignore_case = TRUE), "collections ")  
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("resource ", ignore_case = TRUE), "resources ")  
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("library ", ignore_case = TRUE), "libraries ")  
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("author ", ignore_case = TRUE), "authors ")  
+
+    return(ld_survey_cleaned)
 }
 
 # Load data
@@ -153,20 +159,20 @@ df_ld_features %>%
 ```
 
 ```
-## # A tibble: 1,102 x 2
+## # A tibble: 1,101 x 2
 ##           word     n
 ##          <chr> <int>
-##  1 linked_data    61
-##  2     library    57
-##  3       users    53
+##  1   libraries    65
+##  2       users    65
+##  3 linked_data    61
 ##  4      search    41
 ##  5 information    39
-##  6 collections    31
+##  6 collections    34
 ##  7        data    24
-##  8    metadata    19
-##  9    research    19
-## 10   resources    18
-## # ... with 1,092 more rows
+##  8   resources    23
+##  9    metadata    19
+## 10    research    19
+## # ... with 1,091 more rows
 ```
 
 ```r
@@ -184,26 +190,26 @@ feature_word_pairs
 ```
 
 ```
-## # A tibble: 38,656 x 3
+## # A tibble: 38,287 x 3
 ##          item1       item2     n
 ##          <chr>       <chr> <dbl>
-##  1 linked_data     library    17
-##  2 linked_data       users    17
-##  3      search     library    15
-##  4     library       users    15
-##  5      search linked_data    13
-##  6     library information    13
-##  7       users        data    13
-##  8 linked_data information    12
-##  9       users information    12
-## 10 linked_data collections    11
-## # ... with 38,646 more rows
+##  1   libraries       users    22
+##  2 linked_data       users    20
+##  3 linked_data   libraries    17
+##  4       users        data    17
+##  5      search   libraries    15
+##  6       users collections    14
+##  7       users information    14
+##  8      search linked_data    13
+##  9      search       users    13
+## 10   libraries collections    13
+## # ... with 38,277 more rows
 ```
 
 ```r
 # macro to micro
 feature_word_pairs %>%
-  filter(n > 3) %>%
+  filter(n > 5) %>%
   graph_from_data_frame() %>%
   ggraph(layout = "fr") +
   geom_edge_link(aes(edge_alpha = n, edge_width = n), edge_colour = "cyan4") +
@@ -243,4 +249,71 @@ feature_word_pairs %>%
 
 ![](eda5_files/figure-html/unnamed-chunk-3-3.png)<!-- -->
 
+# Pairwise correlation
+
+
+```r
+word_cors <- df_ld_features %>%
+  group_by(word) %>%#
+  filter(n() >= 10) %>%
+  pairwise_cor(word, id, sort = TRUE)
+
+word_cors %>%
+  filter(item1 %in% c("collections", "users", "search")) %>%
+  group_by(item1) %>%
+  top_n(10) %>%
+  ungroup() %>%
+  mutate(item2 = reorder(item2, correlation)) %>%
+  ggplot(aes(item2, correlation)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ item1, scales = "free") +
+  coord_flip()
+```
+
+```
+## Selecting by correlation
+```
+
+![](eda5_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+
+```r
+set.seed(2016)
+
+word_cors %>%
+  filter(correlation > .15) %>%
+  graph_from_data_frame() %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(edge_alpha = correlation), show.legend = FALSE) +
+  geom_node_point(color = "lightblue", size = 5) +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  theme_void()
+```
+
+![](eda5_files/figure-html/unnamed-chunk-4-2.png)<!-- -->
+
+```r
+feature_word_pairs %>%
+  filter(n > 10)
+```
+
+```
+## # A tibble: 15 x 3
+##          item1       item2     n
+##          <chr>       <chr> <dbl>
+##  1   libraries       users    22
+##  2 linked_data       users    20
+##  3 linked_data   libraries    17
+##  4       users        data    17
+##  5      search   libraries    15
+##  6       users collections    14
+##  7       users information    14
+##  8      search linked_data    13
+##  9      search       users    13
+## 10   libraries collections    13
+## 11   libraries information    13
+## 12 linked_data collections    12
+## 13 linked_data information    12
+## 14   resources   libraries    11
+## 15   libraries        data    11
+```
 
