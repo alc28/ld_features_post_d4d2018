@@ -92,7 +92,7 @@ library(ggraph)
 
 # load libraries
 # Remove responses with 0 feature total score and normalize(i.e., linked data)
-clean_features_text <- function(ld_survey) {
+clean_features_text_v1 <- function(ld_survey) {
   ld_survey_nonzero <- ld_survey %>%
     filter(features_total_score > 0)
   ld_survey_cleaned <- ld_survey_nonzero
@@ -101,6 +101,23 @@ clean_features_text <- function(ld_survey) {
   ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex(" lod ", ignore_case = TRUE), " linked_data ")
   return(ld_survey_cleaned)
 }
+
+clean_features_text <- function(ld_survey) {
+  ld_survey_nonzero <- ld_survey %>%
+    filter(features_total_score > 0)
+  ld_survey_cleaned <- ld_survey_nonzero
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("linked data", ignore_case = TRUE), "linked_data")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("linked open data", ignore_case = TRUE), "linked_data")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex(" lod ", ignore_case = TRUE), " linked_data ")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex(" user ", ignore_case = TRUE), " users ")
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("collection ", ignore_case = TRUE), "collections ")  
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("resource ", ignore_case = TRUE), "resources ")  
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("library ", ignore_case = TRUE), "libraries ")  
+  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("author ", ignore_case = TRUE), "authors ")  
+
+    return(ld_survey_cleaned)
+}
+
 
 # Load data
 ld_survey <- read_csv("data/ld_survey_anonymized_20180301.csv")
@@ -172,20 +189,20 @@ bigram_counts_separated
 ```
 
 ```
-## # A tibble: 928 x 3
+## # A tibble: 926 x 3
 ##        word1       word2     n
 ##        <chr>       <chr> <int>
-##  1   library       users    11
-##  2   library collections     8
+##  1 libraries       users    13
+##  2 libraries collections     9
 ##  3    search     engines     7
 ##  4    search     results     5
 ##  5   special collections     5
 ##  6 authority     records     4
-##  7 knowledge       graph     4
-##  8    linked        jazz     4
-##  9   subject    headings     4
-## 10    titles    subjects     4
-## # ... with 918 more rows
+##  7   digital collections     4
+##  8 knowledge       graph     4
+##  9    linked        jazz     4
+## 10   subject    headings     4
+## # ... with 916 more rows
 ```
 
 # Graph bigrams
@@ -193,7 +210,7 @@ bigram_counts_separated
 
 ```r
 bigram_graph <- bigram_counts_separated %>%
-  filter(n > 1) %>%
+  filter(n > 2) %>%
   graph_from_data_frame()
 
 

@@ -128,11 +128,11 @@ feature_word_pairs %>%
 
 word_cors <- df_ld_features %>%
   group_by(word) %>%#
-  filter(n() >= 10) %>%
+  filter(n() >= 20) %>%
   pairwise_cor(word, id, sort = TRUE)
 
 word_cors %>%
-  filter(item1 %in% c("collections", "users", "search")) %>%
+  filter(item1 %in% c("collections", "users", "libraries")) %>%
   group_by(item1) %>%
   top_n(10) %>%
   ungroup() %>%
@@ -145,7 +145,7 @@ word_cors %>%
 set.seed(2016)
 
 word_cors %>%
-  filter(correlation > .15) %>%
+  filter(correlation > .10) %>%
   graph_from_data_frame() %>%
   ggraph(layout = "fr") +
   geom_edge_link(aes(edge_alpha = correlation), show.legend = FALSE) +
