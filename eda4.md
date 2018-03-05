@@ -92,15 +92,6 @@ library(ggraph)
 
 # load libraries
 # Remove responses with 0 feature total score and normalize(i.e., linked data)
-clean_features_text_v1 <- function(ld_survey) {
-  ld_survey_nonzero <- ld_survey %>%
-    filter(features_total_score > 0)
-  ld_survey_cleaned <- ld_survey_nonzero
-  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("linked data", ignore_case = TRUE), "linked_data")
-  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("linked open data", ignore_case = TRUE), "linked_data")
-  ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex(" lod ", ignore_case = TRUE), " linked_data ")
-  return(ld_survey_cleaned)
-}
 
 clean_features_text <- function(ld_survey) {
   ld_survey_nonzero <- ld_survey %>%
@@ -114,8 +105,15 @@ clean_features_text <- function(ld_survey) {
   ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("resource ", ignore_case = TRUE), "resources ")  
   ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("library ", ignore_case = TRUE), "libraries ")  
   ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("author ", ignore_case = TRUE), "authors ")  
+    ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("engine ", ignore_case = TRUE), "engines ")  
+    ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("subject ", ignore_case = TRUE), "subjects ")  
+      ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("bibliographic ", ignore_case = TRUE), "bibliographical ")  
+      ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("catalog ", ignore_case = TRUE), "catalogs ")  
+    ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("item ", ignore_case = TRUE), "items ")  
+    ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("record ", ignore_case = TRUE), "records ")  
+    ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("article ", ignore_case = TRUE), "articles ")  
 
-    return(ld_survey_cleaned)
+        return(ld_survey_cleaned)
 }
 
 
@@ -189,20 +187,20 @@ bigram_counts_separated
 ```
 
 ```
-## # A tibble: 926 x 3
+## # A tibble: 924 x 3
 ##        word1       word2     n
 ##        <chr>       <chr> <int>
 ##  1 libraries       users    13
 ##  2 libraries collections     9
-##  3    search     engines     7
-##  4    search     results     5
-##  5   special collections     5
-##  6 authority     records     4
+##  3    search     engines     9
+##  4 authority     records     5
+##  5    search     results     5
+##  6   special collections     5
 ##  7   digital collections     4
 ##  8 knowledge       graph     4
 ##  9    linked        jazz     4
-## 10   subject    headings     4
-## # ... with 916 more rows
+## 10  subjects    headings     4
+## # ... with 914 more rows
 ```
 
 # Graph bigrams
@@ -210,16 +208,16 @@ bigram_counts_separated
 
 ```r
 bigram_graph <- bigram_counts_separated %>%
-  filter(n > 2) %>%
+  filter(n > 1) %>%
   graph_from_data_frame()
 
 
 set.seed(2017)
-a <- grid::arrow(type = "closed", length = unit(.1, "inches"))
+a <- grid::arrow(type = "closed", length = unit(.10, "inches"))
 ggraph(bigram_graph, layout = "fr") +
   geom_edge_link(aes(edge_alpha = n), show.legend = FALSE, arrow = a, end_cap = circle(.07, 'inches')) +
   geom_node_point(color = "lightblue", size = 2) +
-  geom_node_text(aes(label = name), vjust = 1, hjust = 0.5) +
+  geom_node_text(aes(label = name), vjust = 1.5, hjust = 0.5) +
   theme_void()
 ```
 

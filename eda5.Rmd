@@ -30,6 +30,8 @@ library(widyr)
 
 # load libraries
 # Remove responses with 0 feature total score and normalize(i.e., linked data)
+
+
 clean_features_text <- function(ld_survey) {
   ld_survey_nonzero <- ld_survey %>%
     filter(features_total_score > 0)
@@ -42,9 +44,17 @@ clean_features_text <- function(ld_survey) {
   ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("resource ", ignore_case = TRUE), "resources ")  
   ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("library ", ignore_case = TRUE), "libraries ")  
   ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("author ", ignore_case = TRUE), "authors ")  
+    ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("engine ", ignore_case = TRUE), "engines ")  
+    ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("subject ", ignore_case = TRUE), "subjects ")  
+      ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("bibliographic ", ignore_case = TRUE), "bibliographical ")  
+      ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("catalog ", ignore_case = TRUE), "catalogs ")  
+    ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("item ", ignore_case = TRUE), "items ")  
+    ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("record ", ignore_case = TRUE), "records ")  
+    ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("article ", ignore_case = TRUE), "articles ")  
 
-    return(ld_survey_cleaned)
+        return(ld_survey_cleaned)
 }
+
 
 # Load data
 ld_survey <- read_csv("data/ld_survey_anonymized_20180301.csv")

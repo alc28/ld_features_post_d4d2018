@@ -93,6 +93,8 @@ library(widyr)
 
 # load libraries
 # Remove responses with 0 feature total score and normalize(i.e., linked data)
+
+
 clean_features_text <- function(ld_survey) {
   ld_survey_nonzero <- ld_survey %>%
     filter(features_total_score > 0)
@@ -105,9 +107,17 @@ clean_features_text <- function(ld_survey) {
   ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("resource ", ignore_case = TRUE), "resources ")  
   ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("library ", ignore_case = TRUE), "libraries ")  
   ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("author ", ignore_case = TRUE), "authors ")  
+    ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("engine ", ignore_case = TRUE), "engines ")  
+    ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("subject ", ignore_case = TRUE), "subjects ")  
+      ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("bibliographic ", ignore_case = TRUE), "bibliographical ")  
+      ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("catalog ", ignore_case = TRUE), "catalogs ")  
+    ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("item ", ignore_case = TRUE), "items ")  
+    ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("record ", ignore_case = TRUE), "records ")  
+    ld_survey_cleaned$ld_features <- str_replace_all(ld_survey_cleaned$ld_features, regex("article ", ignore_case = TRUE), "articles ")  
 
-    return(ld_survey_cleaned)
+        return(ld_survey_cleaned)
 }
+
 
 # Load data
 ld_survey <- read_csv("data/ld_survey_anonymized_20180301.csv")
@@ -159,7 +169,7 @@ df_ld_features %>%
 ```
 
 ```
-## # A tibble: 1,101 x 2
+## # A tibble: 1,098 x 2
 ##           word     n
 ##          <chr> <int>
 ##  1   libraries    65
@@ -170,9 +180,9 @@ df_ld_features %>%
 ##  6 collections    34
 ##  7        data    24
 ##  8   resources    23
-##  9    metadata    19
-## 10    research    19
-## # ... with 1,091 more rows
+##  9    subjects    23
+## 10    metadata    19
+## # ... with 1,088 more rows
 ```
 
 ```r
@@ -190,7 +200,7 @@ feature_word_pairs
 ```
 
 ```
-## # A tibble: 38,287 x 3
+## # A tibble: 38,017 x 3
 ##          item1       item2     n
 ##          <chr>       <chr> <dbl>
 ##  1   libraries       users    22
@@ -203,7 +213,7 @@ feature_word_pairs
 ##  8      search linked_data    13
 ##  9      search       users    13
 ## 10   libraries collections    13
-## # ... with 38,277 more rows
+## # ... with 38,007 more rows
 ```
 
 ```r
