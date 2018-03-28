@@ -26,8 +26,9 @@ data("stop_words")
 library(igraph)
 library(ggraph)
 
+```
 
-# load libraries
+```{r }
 # Remove responses with 0 feature total score and normalize(i.e., linked data)
 
 clean_features_text <- function(ld_survey) {
